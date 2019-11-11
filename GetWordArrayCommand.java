@@ -14,7 +14,7 @@ public class GetWordArrayCommand extends Command {
     void execute() {
         List<String> words = new ArrayList<>();
 
-        Pattern pattern = Pattern.compile("[a-zA-Z]+");
+        Pattern pattern = Pattern.compile("[a-zA-Z\\-]+");
         Matcher matcher = pattern.matcher(score.text);
 
         while (matcher.find()) {

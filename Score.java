@@ -7,11 +7,13 @@ public class Score {
     int charCount;
     List<String> words;
     String text;
+    String filePath;
     double autoReadIndex;
     //Readability is the ease with which a reader can understand a written text. In natural language, the readability of text depends on its content and its presentation. Researchers have used various factors to measure readability. Readability is more than simply legibility, which is a measure of how easily a reader can distinguish individual letters or characters from each other. Higher readability eases reading effort and speed for any reader, but it is especially important for those who do not have high reading comprehension. In readers with poor reading comprehension, raising the readability level of a text from mediocre to good can make the difference between success and failure
 
-    Score(String text) {
+    Score(String text, String arg) {
         this.text = text;
+        this.filePath = arg;
     }
 
     private void printARI() {
@@ -65,6 +67,7 @@ public class Score {
     }
 
     void getScore() {
+        new LoadFileCommand(this).execute();
         new GetSentencesCommand(this).execute();
         new GetWordArrayCommand(this).execute();
         new GetCharactersCommand(this).execute();
