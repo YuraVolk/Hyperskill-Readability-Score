@@ -1,5 +1,6 @@
 package readability;
 
+import javax.swing.plaf.synth.SynthUI;
 import java.util.List;
 
 public class Score {
@@ -9,6 +10,10 @@ public class Score {
     String text;
     String filePath;
     double autoReadIndex;
+    double smog;
+    double fk;
+    int syllables;
+    int polySyllables;
     //Readability is the ease with which a reader can understand a written text. In natural language, the readability of text depends on its content and its presentation. Researchers have used various factors to measure readability. Readability is more than simply legibility, which is a measure of how easily a reader can distinguish individual letters or characters from each other. Higher readability eases reading effort and speed for any reader, but it is especially important for those who do not have high reading comprehension. In readers with poor reading comprehension, raising the readability level of a text from mediocre to good can make the difference between success and failure
 
     Score(String text, String arg) {
@@ -16,54 +21,52 @@ public class Score {
         this.filePath = arg;
     }
 
-    private void printARI() {
-        String text;
-        int ARI = Math.toIntExact(Math.round(autoReadIndex));
-        switch (ARI) {
+    private int getEstimatedYear(double score) {
+        int text;
+        int grade = Math.toIntExact(Math.round(score));
+        switch (grade) {
             case 1:
-                text = "5-6";
+                text = 6;
                 break;
             case 2:
-                text = "6-7";
+                text = 7;
                 break;
             case 3:
-                text = "7-9";
+                text = 9;
                 break;
             case 4:
-                text = "9-10";
+                text = 10;
                 break;
             case 5:
-                text = "10-11";
+                text = 11;
                 break;
             case 6:
-                text = "11-12";
+                text = 12;
                 break;
             case 7:
-                text = "12-13";
+                text = 13;
                 break;
             case 8:
-                text = "13-14";
+                text = 14;
                 break;
             case 9:
-                text = "14-15";
+                text = 15;
                 break;
             case 10:
-                text = "15-16";
+                text = 16;
                 break;
             case 11:
-                text = "16-17";
+                text = 17;
                 break;
             case 12:
-                text = "17-18";
+                text = 18;
                 break;
             case 13:
-                text = "18-24";
-                break;
             default:
-                text = "24+";
+                text = 24;
         }
 
-        System.out.printf("This text should be understood by %s year olds.", text);
+        return text;
     }
 
     void getScore() {
@@ -72,15 +75,25 @@ public class Score {
         new GetWordArrayCommand(this).execute();
         new GetCharactersCommand(this).execute();
         new GetScoreCommand(this).execute();
+        new SyllablesCountCommand(this).execute();
 
         System.out.printf("The text is:\n" +
                 "%s\n\n" +
                 "Words: %s\n" +
                 "Sentences: %s\n" +
                 "Characters: %s\n" +
-                        "Score is: %.2f\n",
+                        "Syllables: %s\n" +
+                        "Polysyllables: %s\n",
                 text, words.size(), numberOfSentences, charCount,
-                autoReadIndex);
-        printARI();
+                syllables, polySyllables);
+        int scoreARI = getEstimatedYear(autoReadIndex);
+        int scoreFK = getEstimatedYear(fk);
+        int scoreSMOG = getEstimatedYear(smog);
+        System.out.printf("Automated Readability Index: %.2f (about %s year olds).\n",
+                        autoReadIndex, scoreARI);
+        System.out.printf("Flesch–Kincaid readability tests: %.2f (about %s year olds).\n",
+                fk, scoreFK);
+        System.out.printf("Simple Measure of Gobbledygook: %.2f (about %s year olds).\n",
+                smog, scoreSMOG);
     }
 }

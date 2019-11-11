@@ -10,11 +10,11 @@ public class GetSentencesCommand extends Command{
 
     @Override
     void execute() {
-        String patternRegex = "([.!?])([\\s\\n])([A-Z]*)";
+        String patternRegex = "([.!?])+";
         Pattern pattern = Pattern.compile(patternRegex);
         Matcher matcher = pattern.matcher(score.text);
 
-        int count = 1;
+        int count = 0;
         while (matcher.find()) {
             count++;
         }
