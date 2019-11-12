@@ -10,6 +10,8 @@ public class GetScoreCommand extends Command {
     }
 
     private void ARI() {
+        System.out.println(4.71 * (chars / words) +
+                0.5 * (words / sentences) - 21.43);
         score.scores[0] = 4.71 * (chars / words) +
                 0.5 * (words / sentences) - 21.43;
     }

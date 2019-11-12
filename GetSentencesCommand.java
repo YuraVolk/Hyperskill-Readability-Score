@@ -14,7 +14,7 @@ public class GetSentencesCommand extends Command{
         Pattern pattern = Pattern.compile(patternRegex);
         Matcher matcher = pattern.matcher(score.text);
 
-        int count = 0;
+        int count = 1;
         while (matcher.find()) {
             count++;
         }
