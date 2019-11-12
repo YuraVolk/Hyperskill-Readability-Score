@@ -19,10 +19,6 @@ public class GetCharactersCommand extends Command {
             }
         }
 
-        if (score.numberOfSentences == 10) {
-            charCount = 476;
-        }
-
-        score.charCount = charCount;
+        score.infoText.put("Characters", charCount);
     }
 }

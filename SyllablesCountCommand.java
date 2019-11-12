@@ -47,7 +47,8 @@ public class SyllablesCountCommand extends Command {
         for (String word : score.words) {
             processWord(word);
         }
-        score.syllables = syllables;
-        score.polySyllables = polysyllables;
+
+        score.infoText.put("Syllables", syllables);
+        score.infoText.put("Polysyllables", polysyllables);
     }
 }

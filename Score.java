@@ -1,19 +1,13 @@
 package readability;
 
-import javax.swing.plaf.synth.SynthUI;
-import java.util.List;
+import java.util.*;
 
 public class Score {
-    int numberOfSentences;
-    int charCount;
     List<String> words;
     String text;
     String filePath;
-    double autoReadIndex;
-    double smog;
-    double fk;
-    int syllables;
-    int polySyllables;
+    Map<String, Integer> infoText = new LinkedHashMap<>();
+    double[] scores = new double[4];
     //Readability is the ease with which a reader can understand a written text. In natural language, the readability of text depends on its content and its presentation. Researchers have used various factors to measure readability. Readability is more than simply legibility, which is a measure of how easily a reader can distinguish individual letters or characters from each other. Higher readability eases reading effort and speed for any reader, but it is especially important for those who do not have high reading comprehension. In readers with poor reading comprehension, raising the readability level of a text from mediocre to good can make the difference between success and failure
 
     Score(String text, String arg) {
@@ -71,29 +65,67 @@ public class Score {
 
     void getScore() {
         new LoadFileCommand(this).execute();
-        new GetSentencesCommand(this).execute();
         new GetWordArrayCommand(this).execute();
+        new GetSentencesCommand(this).execute();
         new GetCharactersCommand(this).execute();
-        new GetScoreCommand(this).execute();
         new SyllablesCountCommand(this).execute();
+        new GetScoreCommand(this).execute();
 
         System.out.printf("The text is:\n" +
-                "%s\n\n" +
-                "Words: %s\n" +
-                "Sentences: %s\n" +
-                "Characters: %s\n" +
-                        "Syllables: %s\n" +
-                        "Polysyllables: %s\n",
-                text, words.size(), numberOfSentences, charCount,
-                syllables, polySyllables);
-        int scoreARI = getEstimatedYear(autoReadIndex);
-        int scoreFK = getEstimatedYear(fk);
-        int scoreSMOG = getEstimatedYear(smog);
-        System.out.printf("Automated Readability Index: %.2f (about %s year olds).\n",
-                        autoReadIndex, scoreARI);
-        System.out.printf("Flesch–Kincaid readability tests: %.2f (about %s year olds).\n",
-                fk, scoreFK);
-        System.out.printf("Simple Measure of Gobbledygook: %.2f (about %s year olds).\n",
-                smog, scoreSMOG);
+                "%s\n" +
+                "Words: %s\n",
+                text, words.size());
+        for (Map.Entry<String, Integer> entry : infoText.entrySet()) {
+            System.out.println(entry.getKey() + ": " + entry.getValue());
+        }
+
+        Scanner scanner = new Scanner(System.in);
+        System.out.println("Enter the score you want to calculate (ARI, FK, SMOG, CL, all):");
+        String choice = scanner.next();
+        scanner.close();
+
+        int scoreARI = getEstimatedYear(scores[0]);
+        int scoreFK = getEstimatedYear(scores[1]);
+        int scoreSMOG = getEstimatedYear(scores[2]);
+        int scoreCL = getEstimatedYear(scores[3]);
+
+        switch (choice) {
+            case "ARI":
+                System.out.printf("Automated Readability Index: %.2f (about %s year olds).\n",
+                        scores[0], scoreARI);
+                break;
+            case "FK":
+                System.out.printf("Flesch–Kincaid readability tests: %.2f (about %s year olds).\n",
+                        scores[1], scoreFK);
+                break;
+            case "SMOG":
+                System.out.printf("Simple Measure of Gobbledygook: %.2f (about %s year olds).\n",
+                        scores[2], scoreSMOG);
+                break;
+            case "CL":
+                System.out.printf("Coleman–Liau index: %.2f (about %s year olds).\n",
+                        scores[3], scoreCL);
+                break;
+            default:
+                System.out.printf("\nAutomated Readability Index: %.2f (about %s year olds).\n",
+                        scores[0], scoreARI);
+                System.out.printf("Flesch–Kincaid readability tests: %.2f (about %s year olds).\n",
+                        scores[1], scoreFK);
+                System.out.printf("Simple Measure of Gobbledygook: %.2f (about %s year olds).\n",
+                        scores[2], scoreSMOG);
+                System.out.printf("Coleman–Liau index: %.2f (about %s year olds).\n\n",
+                        scores[3], scoreCL);
+
+                double average = (scoreARI + scoreCL + scoreSMOG + scoreFK) / 4.00;
+                System.out.printf("This text should be understood in average by %.2f " +
+                                "year olds.", average);
+
+        }
+
+
+
+
+
+
     }
 }

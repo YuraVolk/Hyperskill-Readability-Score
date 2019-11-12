@@ -18,6 +18,7 @@ public class GetSentencesCommand extends Command{
         while (matcher.find()) {
             count++;
         }
-        score.numberOfSentences = count;
+
+        score.infoText.put("Sentences", count);
     }
 }
